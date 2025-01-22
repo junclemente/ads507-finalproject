@@ -4,6 +4,10 @@
 
 To setup and run this project, please follow these steps:
 
+Using conda, install the environment: 
+
+`conda env create -f environment/ads507.yml`
+
 
 # Project Intro / Objective
 

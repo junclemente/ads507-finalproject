@@ -1,0 +1,15 @@
+name: ads507
+channels:
+  - conda-forge
+  - microsoft
+  - defaults
+dependencies:
+  - python=3.12.*
+  - jupyter
+  - matplotlib
+  - numpy
+  - pandas
+  - seaborn
+  - pip
+  - pip:
+    - python-dotenv
