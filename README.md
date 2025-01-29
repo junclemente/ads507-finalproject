@@ -4,37 +4,37 @@
 
 To setup and run this project, please follow these steps:
 
-Using conda, install the environment: 
+Using conda, install the environment:
 
 `conda env create -f environment/ads507.yml`
 
+If changes were made to the YAML file, you can update the environment by running:
+
+`conda env update -f environment/ads507.yml --prune`
 
 # Project Intro / Objective
 
-
-
 # Contributors
 
--   [Amayrani Balbuena](https://github.com/amayranib)
--   [Jun Clemente](https://github.com/junclemente)
--   [Sasha Libolt](https://github.com/slibolt)
+- [Amayrani Balbuena](https://github.com/amayranib)
+- [Jun Clemente](https://github.com/junclemente)
+- [Sasha Libolt](https://github.com/slibolt)
 
 # Methods Used
 
--   SQL
+- SQL
 
 # Technologies
 
--   SQL
--   VS Code
--   Github
+- SQL
+- VS Code
+- Github
 
 # Project Description
 
 This project uses...
 
 ## Data Dictionary
-
 
 # License
 
