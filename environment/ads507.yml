@@ -12,6 +12,7 @@ dependencies:
   - pandas
   - pymysql
   - seaborn
+  - schedule
   - sqlalchemy
   - pip
   - pip:
