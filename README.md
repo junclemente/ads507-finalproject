@@ -2,6 +2,10 @@
 
 # Installation
 
+## Jupyter Notebook and Environment
+Part of the code in this project is run using Jupyter Notebooks.
+Conda is used to manage the Python environment for this project. A YAML file is available for this project. 
+
 To setup and run this project, please follow these steps:
 
 Using conda, install the environment:
@@ -12,7 +16,22 @@ If changes were made to the YAML file, you can update the environment by running
 
 `conda env update -f environment/ads507.yml --prune`
 
+## MySQL Database and Workbench
+
+Access to a MySQL database is also necessary for this project. The database can be created using the provide schema file and MySQL Workbench. 
+
+## APIs
+
+Washington State Department of Transportion Traffic APIs are used as the datasource for this project. The API sources used are:
+- Travel Times
+- Highway Alerts
+- Weather Information
+
+More information for this APIs can be found at the [Washington State Department of Transportation https://wsdot.wa.gov/traffic/api/](https://wsdot.wa.gov/traffic/api/) website. 
+
 # Project Intro / Objective
+
+The objective of this project is to use highway and travel information from the state of Washington to create a dashboard of highway alerts, weather information and travel times. This dashboard will connect to a mysql database. The mysql database connects to the Department of Transportation’s information via rest API and can be used to help end users make travel plans in Washington State. 
 
 # Contributors
 
@@ -22,17 +41,22 @@ If changes were made to the YAML file, you can update the environment by running
 
 # Methods Used
 
-- SQL
+- MySQL
+- MySQL Functions
+- Pandas / Python
 
 # Technologies
 
-- SQL
-- VS Code
 - Github
+- Jupyter Notebooks
+- Microsoft Azure
+- MySQL
+- VS Code
+= Washington State DOT APIs
 
 # Project Description
 
-This project uses...
+Our objective is to create a dashboard for the highway and travel information for the state of Washington. This will include highway alerts, weather information and travel times. This dashboard will connect via rest API and can be used to help consumers make travel plans in Washington state.
 
 ## Data Dictionary
 
