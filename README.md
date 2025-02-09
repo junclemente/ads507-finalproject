@@ -29,6 +29,10 @@ Washington State Department of Transportion Traffic APIs are used as the datasou
 
 More information for this APIs can be found at the [Washington State Department of Transportation https://wsdot.wa.gov/traffic/api/](https://wsdot.wa.gov/traffic/api/) website. 
 
+## Credentials
+
+Access code to retrieve data from the APIs is required. To ensure privacy and prevent abuse, the credentials for this project have been stored in a `.env` file. To use the code provided in this project, a `.env` file must be created in the root folder of the project. The `.env` variables must then be uploaded into the environment. This can be done using the `dotenv` Python library. 
+
 # Project Intro / Objective
 
 The objective of this project is to use highway and travel information from the state of Washington to create a dashboard of highway alerts, weather information and travel times. This dashboard will connect to a mysql database. The mysql database connects to the Department of Transportation’s information via rest API and can be used to help end users make travel plans in Washington State. 
@@ -74,4 +78,5 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 # Acknowledgements
 
+[Microsoft Azure: Cloud Computing Services](https://azure.microsoft.com)
 [Washington State Dept of Transportation](https://wsdot.wa.gov/traffic/api/)
