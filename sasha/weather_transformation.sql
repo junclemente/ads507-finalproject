@@ -1,19 +1,20 @@
 CREATE DEFINER=`sashal`@`%` PROCEDURE `TransformWeatherAlerts`()
 BEGIN
--- Clear existing data
-TRUNCATE TABLE weather_alerts_dim;
--- insert the transformed data into
-INSERT INTO weather_alerts_dim (
+    TRUNCATE TABLE weather_alerts_dim;
+
+    INSERT INTO weather_alerts_dim (
         ID, 
         barometric_pressure, 
         latitude, 
-        longitude, 
+        longitude,
+        loc_key,
         percipitation,
-		reading_time,
+        reading_time,
         humidity, 
         sky_coverage,
         station_id, 
-        road_name, 
+        raw_roadname,
+        road_key, 
         mp, 
         temp, 
         visibility, 
@@ -23,53 +24,58 @@ INSERT INTO weather_alerts_dim (
         updated, 
         last_refresh
     ) 
-SELECT 
-     -- Explicitly reference weather_alerts_raw
-     raw.id AS ID, 
-     raw.barometricpressure AS barometric_pressure,
-     raw.latitude,
-     raw.longitude,
-     
-     -- Handle NULL values for percipitation
-     COALESCE(CAST(raw.precipitationininches AS CHAR), 'UNKNOWN') AS percipitation,
+    SELECT 
+        raw.id AS ID, 
+        raw.barometricpressure AS barometric_pressure,
+        raw.latitude,
+        raw.longitude,
 
-     -- Convert UNIX timestamp to DATETIME
-     FROM_UNIXTIME(SUBSTRING_INDEX(SUBSTRING_INDEX(raw.readingtime, '(', -1), '-', 1) / 1000) AS reading_time,
+        MD5(CONCAT(
+            IFNULL(ROUND(raw.latitude, 3), '0'), 
+            '_', 
+            IFNULL(ROUND(raw.longitude, 3), '0')
+        )) AS loc_key,
 
-     -- Direct mapping
-     raw.relativehumidity AS humidity,
+        COALESCE(CAST(raw.precipitationininches AS CHAR), 'UNKNOWN') AS percipitation,
 
-     -- Handle NULL for sky coverage
-     COALESCE(CAST(raw.skycoverage AS CHAR), 'UNKNOWN') AS sky_coverage,
+        FROM_UNIXTIME(SUBSTRING_INDEX(SUBSTRING_INDEX(raw.readingtime, '(', -1), '-', 1) / 1000) AS reading_time,
 
-     -- Direct mapping
-     raw.stationid AS station_id,
+        raw.relativehumidity AS humidity,
 
-     -- Map road name from stationname. REGEXP finds the pattern to extract from string.
-     CASE 
-        WHEN raw.stationname REGEXP 'I-[0-9]+' THEN SUBSTRING_INDEX(SUBSTRING_INDEX(raw.stationname, 'I-', -1), ' ', 1)
-        WHEN raw.stationname REGEXP 'US-[0-9]+' THEN SUBSTRING_INDEX(SUBSTRING_INDEX(raw.stationname, 'US-', -1), ' ', 1)
-        WHEN raw.stationname REGEXP 'SR[0-9]+' THEN SUBSTRING_INDEX(SUBSTRING_INDEX(raw.stationname, 'SR-', -1), ' ', 1)
-        ELSE 'UNKNOWN'
-    END AS road_name,
+        COALESCE(CAST(raw.skycoverage AS CHAR), 'UNKNOWN') AS sky_coverage,
 
-    -- Map mp from stationname. 
-    CASE 
-        WHEN raw.stationname REGEXP 'mp [0-9]+\\.[0-9]+' THEN 
-            SUBSTRING_INDEX(SUBSTRING_INDEX(raw.stationname, 'mp ', -1), ' ', 1)
-        ELSE 'UNKNOWN'
-    END AS mp,
+        raw.stationid AS station_id,
 
-    -- Direct map temp
-    raw.temperatureinfahrenheit AS temp, 
-    raw.visibility, 
-    raw.winddirectioncardinal AS wind_direction,
-    raw.windgustspeedinmph AS wind_gust_speed,
-    raw.windspeedinmph AS avg_wind_speed, 
-    raw.timestamp AS updated, 
+        CASE 
+            WHEN raw.stationname REGEXP 'I-[0-9]+' THEN REGEXP_SUBSTR(raw.stationname, 'I-[0-9]+')
+            WHEN raw.stationname REGEXP 'US [0-9]+' THEN REGEXP_SUBSTR(raw.stationname, 'US [0-9]+')
+            WHEN raw.stationname REGEXP 'SR [0-9]+' THEN REGEXP_SUBSTR(raw.stationname, 'SR [0-9]+')
+            ELSE 'UNKNOWN'
+        END AS raw_roadname,
 
-    -- Move last_refresh to the end, since it's not in raw
-    NOW() AS last_refresh
-FROM weather_alerts_raw AS raw;
+        (SELECT road_key FROM road_lookup 
+         WHERE road_lookup.raw_road_name = 
+            (CASE 
+                WHEN raw.stationname REGEXP 'I-[0-9]+' THEN REGEXP_SUBSTR(raw.stationname, 'I-[0-9]+')
+                WHEN raw.stationname REGEXP 'US [0-9]+' THEN REGEXP_SUBSTR(raw.stationname, 'US [0-9]+')
+                WHEN raw.stationname REGEXP 'SR [0-9]+' THEN REGEXP_SUBSTR(raw.stationname, 'SR [0-9]+')
+                ELSE 'UNKNOWN'
+            END) 
+         LIMIT 1) AS road_key,
 
+        CASE 
+            WHEN raw.stationname REGEXP 'mp [0-9]+\\.[0-9]+' THEN 
+                SUBSTRING_INDEX(SUBSTRING_INDEX(raw.stationname, 'mp ', -1), ' ', 1)
+            ELSE 'UNKNOWN'
+        END AS mp,
+
+        raw.temperatureinfahrenheit AS temp, 
+        raw.visibility, 
+        raw.winddirectioncardinal AS wind_direction,
+        raw.windgustspeedinmph AS wind_gust_speed,
+        raw.windspeedinmph AS avg_wind_speed, 
+        raw.timestamp AS updated, 
+
+        NOW() AS last_refresh
+    FROM weather_alerts_raw AS raw;
 END

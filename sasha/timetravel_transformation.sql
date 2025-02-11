@@ -11,13 +11,15 @@ BEGIN
         distance,
         end_lat,
         end_long,
+        end_loc_key,
         end_mp,
-        end_roadname,
+        end_road_key,
         end_direction,
         start_lat,
         start_long,
+        start_loc_key,
         start_mp,
-        start_roadname,
+        start_road_key,
         start_direction,
         alert_time,
         updated,
@@ -33,15 +35,30 @@ BEGIN
         -- Endpoint extraction 
         JSON_UNQUOTE(JSON_EXTRACT(endpoint, '$.Latitude')) AS end_lat,
         JSON_UNQUOTE(JSON_EXTRACT(endpoint, '$.Longitude')) AS end_long,
-        JSON_UNQUOTE(JSON_EXTRACT(endpoint, '$.Milepost')) AS end_mp,
-        JSON_UNQUOTE(JSON_EXTRACT(endpoint, '$.RoadName')) AS end_roadname,
+         -- Create hashed end_loc_key
+        MD5(CONCAT(
+            IFNULL(ROUND(JSON_UNQUOTE(JSON_EXTRACT(endpoint, '$.Latitude')), 3), '0'), 
+            IFNULL(ROUND(JSON_UNQUOTE(JSON_EXTRACT(endpoint, '$.Longitude')), 3), '0')
+        )) AS end_loc_key,
+        -- endpoint xtraction continue
+        JSON_UNQUOTE(JSON_EXTRACT(endpoint, '$.MilePost')) AS end_mp,
+        -- map roadname from road_lookup to standardize
+        (SELECT road_key FROM road_lookup WHERE JSON_UNQUOTE(JSON_EXTRACT(endpoint, '$.RoadName')) = raw_road_name LIMIT 1) AS end_road_key,
+		-- endpoint extraction continue
         JSON_UNQUOTE(JSON_EXTRACT(endpoint, '$.Direction')) AS end_direction,
-
         -- Startpoint extraction 
         JSON_UNQUOTE(JSON_EXTRACT(startpoint, '$.Latitude')) AS start_lat,
         JSON_UNQUOTE(JSON_EXTRACT(startpoint, '$.Longitude')) AS start_long,
-        JSON_UNQUOTE(JSON_EXTRACT(startpoint, '$.Milepost')) AS start_mp,
-        JSON_UNQUOTE(JSON_EXTRACT(startpoint, '$.RoadName')) AS start_roadname,
+        -- Create hashed start_loc_key
+        MD5(CONCAT(
+            IFNULL(ROUND(JSON_UNQUOTE(JSON_EXTRACT(startpoint, '$.Latitude')), 3), '0'), 
+            IFNULL(ROUND(JSON_UNQUOTE(JSON_EXTRACT(startpoint, '$.Longitude')), 3), '0')
+        )) AS start_loc_key,
+        -- startpoint extraction continue
+        JSON_UNQUOTE(JSON_EXTRACT(startpoint, '$.MilePost')) AS start_mp,
+        -- roadmap 
+        (SELECT road_key FROM road_lookup WHERE JSON_UNQUOTE(JSON_EXTRACT(startpoint, '$.RoadName')) = raw_road_name LIMIT 1) AS start_road_key,
+        -- startpoint extraction continue
         JSON_UNQUOTE(JSON_EXTRACT(startpoint, '$.Direction')) AS start_direction, 
         
         -- Convert timeupdates from UNIX
