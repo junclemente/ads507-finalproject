@@ -8,7 +8,6 @@ BEGIN
         tt_id,
         avg_time,
         cur_time,
-        note,
         distance,
         end_lat,
         end_long,
@@ -22,14 +21,13 @@ BEGIN
         start_direction,
         alert_time,
         updated,
-        table_refresh
+        last_refresh
     )
     SELECT
         -- Straight pull
         traveltimeid AS tt_id,
         averagetime AS avg_time,
         currenttime AS cur_time, 
-        note, 
         distance, 
         
         -- Endpoint extraction 
@@ -53,7 +51,7 @@ BEGIN
         timestamp AS updated, 
         
         -- Add timestamp for update
-        NOW() AS table_refresh
+        NOW() AS last_refresh
     FROM time_travel_raw;
 
 END
