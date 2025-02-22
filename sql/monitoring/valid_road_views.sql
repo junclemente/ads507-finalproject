@@ -1,10 +1,6 @@
 SHOW DATABASES;
 USE api_fetch_raw;
 
--- Run transformations 
-	CALL TransformTrafficAlerts();
-	CALL TransformWeatherAlerts();
-	CALL TransformTravelTime();
 
 CREATE VIEW valid_traffic_roads AS
 SELECT *

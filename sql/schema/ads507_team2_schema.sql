@@ -50,7 +50,7 @@ CREATE TABLE `api_fetch_hist` (
   `weather_alerts_response` bigint DEFAULT NULL,
   `status` varchar(20) DEFAULT 'pending',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +66,7 @@ CREATE TABLE `application_logs` (
   `log_level` varchar(20) DEFAULT NULL,
   `log_message` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=797 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=833 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,7 +98,7 @@ CREATE TABLE `monitoring_refresh_log` (
   `last_updated` datetime NOT NULL,
   `days_difference` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -166,7 +166,7 @@ CREATE TABLE `time_travel_hist` (
   `TravelTimeID` bigint DEFAULT NULL,
   `timestamp` datetime DEFAULT NULL,
   PRIMARY KEY (`my_row_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9577 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9913 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -251,7 +251,7 @@ CREATE TABLE `traffic_alerts_hist` (
   `StartTime` text,
   `timestamp` datetime DEFAULT NULL,
   PRIMARY KEY (`my_row_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5566 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5760 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -278,7 +278,7 @@ CREATE TABLE `traffic_alerts_raw` (
   `StartTime` text,
   `timestamp` datetime DEFAULT NULL,
   PRIMARY KEY (`my_row_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=98 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -466,7 +466,7 @@ CREATE TABLE `weather_alerts_hist` (
   `WindSpeedInMPH` double DEFAULT NULL,
   `timestamp` datetime DEFAULT NULL,
   PRIMARY KEY (`my_row_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5770 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5974 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -844,37 +844,36 @@ DELIMITER ;
 DELIMITER ;;
 CREATE DEFINER=`amayranib`@`%` PROCEDURE `update_monitoring_log`()
 BEGIN
-
--- Clear existing data
-    TRUNCATE TABLE monitoring_refresh_log;
+   -- Clear existing data in the log
+TRUNCATE TABLE monitoring_refresh_log;
 
 -- Insert Traffic Alerts Monitoring
-INSERT INTO monitoring_refresh_log( table_name, last_refresh, last_updated, days_difference)
+INSERT INTO monitoring_refresh_log (table_name, last_refresh, last_updated, days_difference)
 SELECT 
-	'Traffic Alerts' AS table_name,
-     FROM_UNIXTIME(MAX(last_refresh)) AS last_refresh,
-    MAX(updated) AS last_updated,
-    TIMESTAMPDIFF(DAY, MAX(last_refresh), MAX(updated)) AS days_difference 
+    'Traffic Alerts', 
+    MAX(last_refresh) - INTERVAL 8 HOUR,  -- Convert PST to UTC
+    MAX(updated),  -- Already in UTC
+    TIMESTAMPDIFF(DAY, MAX(last_refresh) - INTERVAL 8 HOUR, MAX(updated)) 
 FROM traffic_alerts_dim
 WHERE last_refresh IS NOT NULL AND updated IS NOT NULL;
 
 -- Insert Weather Alerts Monitoring
-INSERT INTO monitoring_refresh_log( table_name, last_refresh, last_updated, days_difference)
+INSERT INTO monitoring_refresh_log (table_name, last_refresh, last_updated, days_difference)
 SELECT 
-	'Weather Alerts' AS table_name,
-   FROM_UNIXTIME(MAX(last_refresh)) AS last_refresh,
-    MAX(updated) AS last_updated,
-    TIMESTAMPDIFF(DAY, MAX(last_refresh), MAX(updated)) AS days_difference 
+    'Weather Alerts', 
+    MAX(last_refresh) - INTERVAL 8 HOUR,  
+    MAX(updated),  
+    TIMESTAMPDIFF(DAY, MAX(last_refresh) - INTERVAL 8 HOUR, MAX(updated)) 
 FROM weather_alerts_dim
 WHERE last_refresh IS NOT NULL AND updated IS NOT NULL;
 
 -- Insert Travel Time Alerts Monitoring
-INSERT INTO monitoring_refresh_log( table_name, last_refresh, last_updated, days_difference)
+INSERT INTO monitoring_refresh_log (table_name, last_refresh, last_updated, days_difference)
 SELECT 
-	'Travel Time Alerts' AS table_name,
-     FROM_UNIXTIME(MAX(last_refresh)) AS last_refresh,
-    MAX(updated) AS last_updated,
-    TIMESTAMPDIFF(DAY, MAX(last_refresh), MAX(updated)) AS days_difference 
+    'Travel Time Alerts', 
+    MAX(last_refresh) - INTERVAL 8 HOUR,  
+    MAX(updated),  
+    TIMESTAMPDIFF(DAY, MAX(last_refresh) - INTERVAL 8 HOUR, MAX(updated)) 
 FROM time_travel_dim
 WHERE last_refresh IS NOT NULL AND updated IS NOT NULL;
 
@@ -966,4 +965,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-02-22  7:57:10
+-- Dump completed on 2025-02-22 12:10:46
