@@ -12,11 +12,15 @@ To setup and run this project, please follow these steps:
 
 Using conda, install the environment:
 
-`conda env create -f environment/ads507.yml`
+```
+conda env create -f environment/ads507.yml
+```
 
 If changes were made to the YAML file, you can update the environment by running:
 
-`conda env update -f environment/ads507.yml --prune`
+```
+conda env update -f environment/ads507.yml --prune
+```
 
 ### MySQL Database and Workbench
 
@@ -36,9 +40,13 @@ More information for this APIs can be found at the [Washington State Department 
 
 Access code to retrieve data from the APIs is required. To ensure privacy and prevent abuse, the credentials for this project have been stored in a `.env` file. To use the code provided in this project, a `.env` file must be created in the root folder of the project. The `.env` variables must then be uploaded into the environment. This can be done using the `dotenv` Python library.
 
-## Production
+## Python Environment and CRON
 
-For production, the notebook that runs the extract, load, and transform script was exported to a python script.
+To set up the project to run using a CRON job, the Jupyter Notebook was exported to a Python script. To create a compatible environment without Conda, a `requirements.txt` file was created with the following command: 
+
+```
+pip list --format=freeze > requirements.txt
+```
 
 A CRON job can be used to run the script on a schedule.
 
