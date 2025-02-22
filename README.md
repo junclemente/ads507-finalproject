@@ -1,58 +1,20 @@
 # ADS 507 - Practical Data Engineering
 
-# Installation
+# Project Overview
 
-For development, part of the code in this project is run using Jupyter Notebooks. Conda is used to manage the Python environment. A YAML file is available for this project.
+This project leverages highway and travel information from the Washington State Department of Transportation (WSDOT) to create an interactive dashboard that provides real-time highway alerts, weather updates, and travel times.
 
-## Development
+The dashboard connects to a MySQL database, which ingests data from WSDOT’s RESTful APIs. By integrating live traffic and weather data, this system helps end users make informed travel decisions in Washington State.
 
-### Jupyter Notebook and Environment
+# Project Objective
 
-To setup and run this project, please follow these steps:
+The primary goal of this project is to:
 
-Using conda, install the environment:
-
-```
-conda env create -f environment/ads507.yml
-```
-
-If changes were made to the YAML file, you can update the environment by running:
-
-```
-conda env update -f environment/ads507.yml --prune
-```
-
-### MySQL Database and Workbench
-
-Access to a MySQL database is also necessary for this project. The database can be created using the provide schema file and MySQL Workbench.
-
-### APIs
-
-Washington State Department of Transportion Traffic APIs are used as the datasource for this project. The API sources used are:
-
-- Travel Times
-- Highway Alerts
-- Weather Information
-
-More information for this APIs can be found at the [Washington State Department of Transportation https://wsdot.wa.gov/traffic/api/](https://wsdot.wa.gov/traffic/api/) website.
-
-### Credentials
-
-Access code to retrieve data from the APIs is required. To ensure privacy and prevent abuse, the credentials for this project have been stored in a `.env` file. To use the code provided in this project, a `.env` file must be created in the root folder of the project. The `.env` variables must then be uploaded into the environment. This can be done using the `dotenv` Python library.
-
-## Python Environment and CRON
-
-To set up the project to run using a CRON job, the Jupyter Notebook was exported to a Python script. To create a compatible environment without Conda, a `requirements.txt` file was created with the following command: 
-
-```
-pip list --format=freeze > requirements.txt
-```
-
-A CRON job can be used to run the script on a schedule.
-
-# Project Intro / Objective
-
-The objective of this project is to use highway and travel information from the state of Washington to create a dashboard of highway alerts, weather information and travel times. This dashboard will connect to a mysql database. The mysql database connects to the Department of Transportation’s information via rest API and can be used to help end users make travel plans in Washington State.
+- Develop a dashboard that displays real-time highway and travel information.
+- Aggregate traffic alerts, weather conditions, and estimated travel times from WSDOT.
+- Store and manage data efficiently using a MySQL database.
+- Connect to WSDOT’s RESTful APIs to ensure continuous updates.
+- Provide an intuitive and accessible tool for travelers in Washington State.
 
 # Contributors
 
@@ -60,26 +22,102 @@ The objective of this project is to use highway and travel information from the 
 - [Jun Clemente](https://github.com/junclemente)
 - [Sasha Libolt](https://github.com/slibolt)
 
+
+# Installation
+
+This project uses Jupyter Notebooks, Python scripts, a MySQL database, and API integreation with the Washington State Department of Transportation APIs. 
+
+## Install the Conda Environment
+
+- Anaconda or Miniconda must be installed on your system. 
+- Run the following command to create the environment:
+```bash
+conda env create -f environment/ads507.yml
+```
+- If the YAML file needs to be updated or modified, the environment can be updated with the following: 
+```bash
+conda env update -f environment/ads507.yml --prune
+```
+- Activate the environment:
+```bash
+conda activate ads507
+```
+
+## Database Setup
+
+This project requires a MySQL database to store traffic data. 
+- Ensure access to a MySQL Server. MySQL Workbench can also be used. 
+- Use the provided schema file located in: 
+```pgsql
+sql/schema/
+├── ads507_team2_schema.sql
+└── sample_data.sql 
+```
+- Run the `ads507_team2_schema.sql` SQL script to create the database and tables. 
+- `sample_data.sql` was included as example data but it is recommended to run the Jupyter Notebook or Python script to populate the database. 
+
+### API Configuration
+
+This project fetches real-time data provided by the Washington State Department of Transportation (WSDOT) APIs:
+- Travel Times
+- Highway Alerts
+- Weather Information
+
+#### Obtain API Access Credentials:
+- Obtain an API key from [WSDOT API Portal](https://wsdot.wa.gov/traffic/api/). 
+- This key is required to access the APIs. 
+
+#### Create a `.env` File
+
+In the root directory of the project, create a file named `.env` with the following variables: 
+
+```ini
+# WSDOT API Key
+API_KEY=your_api_key_here
+
+# MySQL Database Configuration
+AZURE_URL=your_database_url
+AZURE_PORT=your_database_port
+AZURE_DB=your_database_name
+
+AZURE_USERNAME=your_database_username
+AZURE_PWD=your_database_password
+```
+- The `.env` file is automatically loaded by the project using the `dotenv` Python library. 
+- API requests and datbase conmnections pull credentials from this file instead of hardcoding them into the file to ensure security and prevent abuse. 
+
+#### Security
+Do not commit the `.env` file to Git as it contains sensitive credentials. 
+To prevent accidental commits, the `.gitignore` file should include `.env`. 
+
+## Python Environment and CRON
+
+This project can be executed manually in a Python environment or automatically using a CRON job for scheduled execution. 
+
+### Setting Up the Python Environment
+- A `requirements.txt` file is included but a current package can be created from the Conda environment using the following: 
+```bash
+pip list --format=freeze > requirements.txt
+```
+- Create and install the dependencies in a virtual environment. 
+- The ETL in Jupyter Notebook (`extract_and_load_mysql.ipynb`) was exported as a Python script (`etl_script.py`). This can be executed and scheduled using a CRON job. 
+
 # Methods Used
+This project uses data engineering, database management, and API integration:
+- ELT (Extract, Load, Transform)
+- MySQL Queries and Functions
+- API Integration
+- Data Processing with Pandas
+- CRON Job Scheduling
 
-- MySQL
-- MySQL Functions
-- Pandas / Python
+# Technologies Used
 
-# Technologies
-
-- Github
-- Jupyter Notebooks
-- Microsoft Azure
-- MySQL
-- VS Code
-  = Washington State DOT APIs
-
-# Project Description
-
-Our objective is to create a dashboard for the highway and travel information for the state of Washington. This will include highway alerts, weather information and travel times. This dashboard will connect via rest API and can be used to help consumers make travel plans in Washington state.
-
-## Data Dictionary
+- Programming and Scripting: Python, Jupyter Notebooks
+- Database Management: MySQL, MySQL Workbench
+- Cloud Infrastructure: Microsoft Azure (database hosting)
+- Version Control & Collaboration: Git, GitHub
+- Development Tools: VS Code, MySQL Workbench
+- APIs: Washington State DOT REST APIs
 
 # License
 
@@ -95,5 +133,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 # Acknowledgements
 
-[Microsoft Azure: Cloud Computing Services](https://azure.microsoft.com)
-[Washington State Dept of Transportation](https://wsdot.wa.gov/traffic/api/)
+- [Microsoft Azure: Cloud Computing Services](https://azure.microsoft.com)
+- [Washington State Dept of Transportation](https://wsdot.wa.gov/traffic/api/)
+- [ChatGPT OpenAI](https://chat.openai.com)
+
+
+This project documentation was revised with guidance from OpenAI’s ChatGPT (2025).
+
