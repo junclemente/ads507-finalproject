@@ -1,6 +1,7 @@
 CREATE DEFINER=`sashal`@`%` PROCEDURE `TransformTravelTime`()
 BEGIN
-    -- Clear existing data
+    -- check if data, if yes then truncate.
+    IF EXISTS (SELECT 1 from time_travel_dim LIMIT 1) THEN 
     TRUNCATE TABLE time_travel_dim;
 
     -- Insert transformed data
@@ -70,5 +71,6 @@ BEGIN
         -- Add timestamp for update
         NOW() AS last_refresh
     FROM time_travel_raw;
+END IF;
 
 END

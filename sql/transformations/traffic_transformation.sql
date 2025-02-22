@@ -1,6 +1,7 @@
 CREATE DEFINER=`sashal`@`%` PROCEDURE `TransformTrafficAlerts`()
 BEGIN
-    -- Clear existing data
+	-- check if data, if yes then truncate.
+    IF EXISTS (SELECT 1 from traffic_alerts_dim LIMIT 1) THEN 
     TRUNCATE TABLE traffic_alerts_dim;
 
     -- Insert transformed data
@@ -82,5 +83,6 @@ BEGIN
         -- Add timestamp for update
         NOW() AS last_refresh
     FROM traffic_alerts_raw;
+END IF;
 
 END

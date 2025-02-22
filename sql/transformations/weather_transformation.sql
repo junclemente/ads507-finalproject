@@ -1,6 +1,8 @@
 CREATE DEFINER=`sashal`@`%` PROCEDURE `TransformWeatherAlerts`()
 BEGIN
-    TRUNCATE TABLE weather_alerts_dim;
+-- check if data, if yes then truncate.
+    IF EXISTS (SELECT 1 from traffic_alerts_dim LIMIT 1) THEN 
+    TRUNCATE TABLE traffic_alerts_dim;
 
     INSERT INTO weather_alerts_dim (
         station_id, 
@@ -75,4 +77,5 @@ BEGIN
 -- Add our last refresh for this procedure
         NOW() AS last_refresh
     FROM weather_alerts_raw AS raw;
+END IF;
 END
