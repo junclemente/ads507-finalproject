@@ -2,57 +2,40 @@
 
 # Installation
 
-For development, part of the code in this project is run using Jupyter Notebooks. Conda is used to manage the Python environment. A YAML file is available for this project.
-
-## Development
-
-### Jupyter Notebook and Environment
+## Jupyter Notebook and Environment
+Part of the code in this project is run using Jupyter Notebooks.
+Conda is used to manage the Python environment for this project. A YAML file is available for this project. 
 
 To setup and run this project, please follow these steps:
 
 Using conda, install the environment:
 
-```
-conda env create -f environment/ads507.yml
-```
+`conda env create -f environment/ads507.yml`
 
 If changes were made to the YAML file, you can update the environment by running:
 
-```
-conda env update -f environment/ads507.yml --prune
-```
+`conda env update -f environment/ads507.yml --prune`
 
-### MySQL Database and Workbench
+## MySQL Database and Workbench
 
-Access to a MySQL database is also necessary for this project. The database can be created using the provide schema file and MySQL Workbench.
+Access to a MySQL database is also necessary for this project. The database can be created using the provide schema file and MySQL Workbench. 
 
-### APIs
+## APIs
 
 Washington State Department of Transportion Traffic APIs are used as the datasource for this project. The API sources used are:
-
 - Travel Times
 - Highway Alerts
 - Weather Information
 
-More information for this APIs can be found at the [Washington State Department of Transportation https://wsdot.wa.gov/traffic/api/](https://wsdot.wa.gov/traffic/api/) website.
+More information for this APIs can be found at the [Washington State Department of Transportation https://wsdot.wa.gov/traffic/api/](https://wsdot.wa.gov/traffic/api/) website. 
 
-### Credentials
+## Credentials
 
-Access code to retrieve data from the APIs is required. To ensure privacy and prevent abuse, the credentials for this project have been stored in a `.env` file. To use the code provided in this project, a `.env` file must be created in the root folder of the project. The `.env` variables must then be uploaded into the environment. This can be done using the `dotenv` Python library.
-
-## Python Environment and CRON
-
-To set up the project to run using a CRON job, the Jupyter Notebook was exported to a Python script. To create a compatible environment without Conda, a `requirements.txt` file was created with the following command: 
-
-```
-pip list --format=freeze > requirements.txt
-```
-
-A CRON job can be used to run the script on a schedule.
+Access code to retrieve data from the APIs is required. To ensure privacy and prevent abuse, the credentials for this project have been stored in a `.env` file. To use the code provided in this project, a `.env` file must be created in the root folder of the project. The `.env` variables must then be uploaded into the environment. This can be done using the `dotenv` Python library. 
 
 # Project Intro / Objective
 
-The objective of this project is to use highway and travel information from the state of Washington to create a dashboard of highway alerts, weather information and travel times. This dashboard will connect to a mysql database. The mysql database connects to the Department of Transportation’s information via rest API and can be used to help end users make travel plans in Washington State.
+The objective of this project is to use highway and travel information from the state of Washington to create a dashboard of highway alerts, weather information and travel times. This dashboard will connect to a mysql database. The mysql database connects to the Department of Transportation’s information via rest API and can be used to help end users make travel plans in Washington State. 
 
 # Contributors
 
@@ -73,7 +56,7 @@ The objective of this project is to use highway and travel information from the 
 - Microsoft Azure
 - MySQL
 - VS Code
-  = Washington State DOT APIs
+= Washington State DOT APIs
 
 # Project Description
 
