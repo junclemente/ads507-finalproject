@@ -92,36 +92,32 @@ To prevent accidental commits, the `.gitignore` file should include `.env`.
 
 ## Python Environment and CRON
 
-To set up the project to run using a CRON job, the Jupyter Notebook was exported to a Python script. To create a compatible environment without Conda, a `requirements.txt` file was created with the following command: 
+This project can be executed manually in a Python environment or automatically using a CRON job for scheduled execution. 
 
-```
+### Setting Up the Python Environment
+- A `requirements.txt` file is included but a current package can be created from the Conda environment using the following: 
+```bash
 pip list --format=freeze > requirements.txt
 ```
-
-A CRON job can be used to run the script on a schedule.
-
-
-
-
+- Create and install the dependencies in a virtual environment. 
+- The ETL in Jupyter Notebook (`extract_and_load_mysql.ipynb`) was exported as a Python script (`etl_script.py`). This can be executed and scheduled using a CRON job. 
 
 # Methods Used
+This project uses data engineering, database management, and API integration:
+- ELT (Extract, Load, Transform)
+- MySQL Queries and Functions
+- API Integration
+- Data Processing with Pandas
+- CRON Job Scheduling
 
-- MySQL
-- MySQL Functions
-- Pandas / Python
+# Technologies Used
 
-# Technologies
-
-- Github
-- Jupyter Notebooks
-- Microsoft Azure
-- MySQL
-- VS Code
-- Washington State DOT APIs
-
-
-
-## Data Dictionary
+- Programming and Scripting: Python, Jupyter Notebooks
+- Database Management: MySQL, MySQL Workbench
+- Cloud Infrastructure: Microsoft Azure (database hosting)
+- Version Control & Collaboration: Git, GitHub
+- Development Tools: VS Code, MySQL Workbench
+- APIs: Washington State DOT REST APIs
 
 # License
 
@@ -137,5 +133,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 # Acknowledgements
 
-[Microsoft Azure: Cloud Computing Services](https://azure.microsoft.com)
-[Washington State Dept of Transportation](https://wsdot.wa.gov/traffic/api/)
+- [Microsoft Azure: Cloud Computing Services](https://azure.microsoft.com)
+- [Washington State Dept of Transportation](https://wsdot.wa.gov/traffic/api/)
+- [ChatGPT OpenAI](https://chat.openai.com)
+
+
+This project documentation was revised with guidance from OpenAI’s ChatGPT (2025).
+
